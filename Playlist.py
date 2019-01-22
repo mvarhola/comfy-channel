@@ -6,6 +6,5 @@ class Playlist:
 		self.dir = directory
 		self.files = []
 
-
 	def next(self):
 		self.files.pop()
