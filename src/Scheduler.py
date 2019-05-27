@@ -1,5 +1,8 @@
 import configparser
+
+import Config as c
 import Generator
+
 
 class Block:
 
@@ -11,16 +14,17 @@ class Block:
 		self.playlist = []
 
 		playlist = Generator.gen_playlist(folder, num_files = int(num_files))
-		upnext = Generator.gen_upnext('./upnext/video','./upnext/audio',
-											 	playlist = playlist, 
-											 	info_file='./upnext/wisdom.txt')
+		upnext = Generator.gen_upnext(	c.SCHEDULER_UPNEXT_VIDEO_FOLDER,
+										c.SCHEDULER_UPNEXT_AUDIO_FOLDER,
+										playlist = playlist, 
+										info_file=c.SCHEDULER_UPNEXT_WISDOM_FILE)
 		
 
 		self.playlist += [upnext] + playlist
 		
 class Scheduler:
 	
-	def __init__(self, input_file = 'config.ini'):
+	def __init__(self, input_file):
 		self.config = configparser.ConfigParser()
 		self.config.read(input_file)
 

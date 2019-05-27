@@ -1,10 +1,10 @@
 import os
-from MediaItem import MediaItem
 import random
 from datetime import datetime
 
-def get_time():
-	return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+import Logger
+from MediaItem import MediaItem
+
 
 def get_time_hm():
     return datetime.now()
@@ -15,7 +15,7 @@ def listdir_nohidden(path):
             yield os.path.join(path, f)
 
 def gen_playlist(dir, num_files=5):
-    print('{}: Generating new playlist...'.format(get_time()))
+    Logger.LOGGER.log(Logger.TYPE_INFO,'Generating playlist from directory: {}'.format(dir))
     playlist = []
     directory_listing = []
 
@@ -33,8 +33,8 @@ def gen_playlist(dir, num_files=5):
     return playlist
 
 def gen_upnext(video_dir, audio_dir = None, playlist = None, info_file = None):
-    video_file  :str
-    audio_file  :str
+    video_file  = None
+    audio_file  = None
     info_text   = None
 
     video_file = random.choice(list(listdir_nohidden(video_dir)))
@@ -50,8 +50,8 @@ def gen_upnext_text(playlist, info_file = None):
 
     time_index = get_time_hm()
     for item in playlist:
-        time_index += item.duration_readable
         overlay_text += time_index.strftime("%H:%M") + "  " + item.title +"\n\n"
+        time_index += item.duration_readable
 
     if info_file:
         overlay_text += "\n" + get_random_line(info_file)
