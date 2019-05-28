@@ -3,20 +3,20 @@
 MAX_CONSECUTIVE_RETRIES = 3 # TODO: If several consecutive files fail, exit program
 MAX_SAME_FILE_RETRIES 	= 5 # Number of times to attempt playing a file before giving up
 
-PLAYOUT_FILE    = 'configs/playout.ini'
+PLAYOUT_FILE    = 'playout.ini'
 OUTPUT_LOCATION = 'rtmp://localhost/live/stream'
 
-SCHEDULER_UPNEXT_VIDEO_FOLDER = './upnext/video'
-SCHEDULER_UPNEXT_AUDIO_FOLDER = './upnext/audio'
-SCHEDULER_UPNEXT_WISDOM_FILE  = './upnext/wisdom.txt'
+SCHEDULER_UPNEXT_VIDEO_FOLDER = 'upnext/video'
+SCHEDULER_UPNEXT_AUDIO_FOLDER = 'upnext/audio'
+SCHEDULER_UPNEXT_WISDOM_FILE  = 'upnext/wisdom.txt'
 
 SERV_DRAWTEXT_X             = 25
 SERV_DRAWTEXT_Y             = 25
 SERV_DRAWTEXT_SHADOW_X      = 2
 SERV_DRAWTEXT_SHADOW_Y      = 2
 SERV_DRAWTEXT_SHADOW_COLOR  = 'black'
-SERV_DRAWTEXT_FONT_FILE     = 'fonts/ProNW4.ttc'
-SERV_DRAWTEXT_FONT_SIZE     = 40
+SERV_DRAWTEXT_FONT_FILE     = 'fonts/hc-too5.ttf'
+SERV_DRAWTEXT_FONT_SIZE     = 52
 SERV_DRAWTEXT_FONT_COLOR    = 'white'
 
 SERV_OUTPUT_ASPECT  = "600:480"
@@ -30,8 +30,8 @@ CLIENT_DRAWTEXT_Y = 113
 CLIENT_DRAWTEXT_SHADOW_X = 2
 CLIENT_DRAWTEXT_SHADOW_Y = 2
 CLIENT_DRAWTEXT_SHADOW_COLOR = 'black'
-CLIENT_DRAWTEXT_FONT_FILE = 'fonts/ProNW4.ttc'
-CLIENT_DRAWTEXT_FONT_SIZE = 24
+CLIENT_DRAWTEXT_FONT_FILE = 'fonts/hc-too5.ttf'
+CLIENT_DRAWTEXT_FONT_SIZE = 32
 CLIENT_DRAWTEXT_FONT_COLOR = 'white'
 
 CLIENT_VCODEC			= 'h264'

@@ -10,7 +10,7 @@ class MediaItem:
         self.overlay_text   = overlay_text
         self.media_type     = media_type
 
-        self.media_info     = pymediainfo.MediaInfo.parse(self.video_path, library_file = "libmediainfo.dylib")
+        self.media_info     = pymediainfo.MediaInfo.parse(self.video_path)
 
         self.title              = self.media_info.tracks[0].other_file_name[0]
         self.duration           = self.media_info.tracks[0].duration

@@ -1,9 +1,6 @@
 # Custom Folders
-videos/
-fonts/
 *.pyc
 .vscode
-upnext/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
