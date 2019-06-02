@@ -5,6 +5,8 @@ import Config as c
 
 devnull = subprocess.DEVNULL
 
+# The server consumes the stream from the client and outputs a single continuous stream
+# Also adds a clock overlay onto the video
 class Server:
 
 	def __init__(self, output):
@@ -32,6 +34,7 @@ class Server:
 
 		self.ff = ffmpeg.output(joined, self.output, vcodec='h264', 
 								aspect=c.SERV_OUTPUT_ASPECT, 
+								acodec=c.SERV_OUTPUT_ACODEC,
 								crf=c.SERV_OUTPUT_CRF, 
 								preset=c.SERV_OUTPUT_PRESET, 
 								format='flv', 
