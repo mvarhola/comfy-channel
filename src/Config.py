@@ -49,3 +49,5 @@ CLIENT_HLS_LIST_SIZE 	= 5
 CLIENT_HLS_TIME			= 0.1
 CLIENT_FORMAT			= 'hls'
 CLIENT_PIX_FMT			= 'yuv444p'
+
+CLIENT_FLEX             = 1
