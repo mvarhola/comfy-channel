@@ -2,11 +2,18 @@ import subprocess
 from datetime import datetime
 
 import ffmpeg
+import psutil
 
 import Config as c
 import Logger
 
 devnull = subprocess.DEVNULL
+
+def kill(proc_pid):
+    process = psutil.Process(proc_pid)
+    for proc in process.children(recursive=True):
+        proc.kill()
+    process.kill()
 
 class Client:
 
@@ -75,7 +82,14 @@ class Client:
 		self.cmd = ['ffmpeg']+ffmpeg.get_args(self.ff)
 
 		self.process = subprocess.Popen(self.cmd, stdout=self.server.stdin, stderr=devnull)
-		self.process.wait()
+		try:
+			flex = c.CLIENT_FLEX # Number of seconds of extra time before timeout
+			timeout = (self.media_item.duration/1000) # Content length in seconds
+			self.process.wait(timeout=timeout+flex)
+		except subprocess.TimeoutExpired:
+			Logger.LOGGER.log(Logger.TYPE_ERROR,'Taking longer to play than expected, killing current item')
+			kill(self.process.pid)
+			self.process.returncode = 0
 
 		return self.process.returncode	# returncode 0 if process exited without problems, 1 for general error
 
