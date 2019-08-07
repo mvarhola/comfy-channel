@@ -12,7 +12,9 @@ class MediaItem:
 
         self.media_info     = pymediainfo.MediaInfo.parse(self.video_path)
 
-        self.title              = self.media_info.tracks[0].other_file_name[0]
+        if not self.media_info.tracks[0].other_file_name :
+                self.title              = self.media_info.tracks[0].file_name
+        else : self.title              = self.media_info.tracks[0].other_file_name[0]
         self.duration           = self.media_info.tracks[0].duration
         self.duration_readable  = datetime.timedelta(milliseconds=self.duration) 
         self.file_extension     = self.media_info.tracks[0].file_extension
