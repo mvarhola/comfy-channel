@@ -38,7 +38,7 @@ class Server:
 								crf=c.SERV_OUTPUT_CRF, 
 								preset=c.SERV_OUTPUT_PRESET, 
 								format='flv', 
-								pix_fmt='yuv444p'
+								pix_fmt='yuv420p'
 								)
 
 		self.cmd = ['ffmpeg','-re']+ffmpeg.get_args(self.ff)
