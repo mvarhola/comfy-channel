@@ -7,6 +7,7 @@ import psutil
 import Config as c
 import Logger
 
+CLIENT_DEBUG = False
 devnull = subprocess.DEVNULL
 
 def kill(proc_pid):
@@ -69,7 +70,7 @@ class Client:
 								flags=c.CLIENT_FLAGS,
 								g=c.CLIENT_G, 
 								acodec=c.CLIENT_ACODEC,
-								strict=c.CLIENT_STRICT ,
+								strict=c.CLIENT_STRICT,
 								ab=c.CLIENT_AUDIO_BITRATE,
 								ar=c.CLIENT_AUDIO_RATE,
 								preset=c.CLIENT_PRESET,
@@ -81,7 +82,7 @@ class Client:
 
 		self.cmd = ['ffmpeg']+ffmpeg.get_args(self.ff)
 
-		self.process = subprocess.Popen(self.cmd, stdout=self.server.stdin, stderr=devnull)
+		self.process = subprocess.Popen(self.cmd, stdout=self.server.stdin, stderr=(None if CLIENT_DEBUG else devnull))
 		try:
 			flex = c.CLIENT_FLEX # Number of seconds of extra time before timeout
 			timeout = (self.media_item.duration/1000) # Content length in seconds

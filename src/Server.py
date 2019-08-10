@@ -3,6 +3,7 @@ import subprocess
 import Logger
 import Config as c
 
+SERVER_DEBUG = False
 devnull = subprocess.DEVNULL
 
 # The server consumes the stream from the client and outputs a single continuous stream
@@ -42,7 +43,7 @@ class Server:
 								)
 
 		self.cmd = ['ffmpeg','-re']+ffmpeg.get_args(self.ff)
-		self.process = subprocess.Popen(self.cmd, stdin=subprocess.PIPE, stdout=devnull, stderr=devnull)
+		self.process = subprocess.Popen(self.cmd, stdin=subprocess.PIPE, stdout=devnull, stderr=(None if SERVER_DEBUG else devnull))
 		return self.process
 
 	def stop(self):
