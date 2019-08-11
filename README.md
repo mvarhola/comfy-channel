@@ -101,6 +101,8 @@ There are also modules that need to be installed by Python. To do so, run the fo
 pip install -r src/requirements.txt
 ```
 
+The **pymediainfo** requires you have the package **mediainfo** installed on your machine (which it is not by default on Ubuntu 18).
+
 ## Adding your own files
 
 [**playout.ini**](playout.ini) contains the order of blocks that will be played by Comfy Channel.
