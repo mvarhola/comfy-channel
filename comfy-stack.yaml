@@ -1,0 +1,45 @@
+version: '3.8'
+services:
+  comfy-channel:
+    image: comfy-channel:local
+    restart: unless-stopped
+    environment:
+    - SERVER_IP=nginx-rtmp/live/stream
+    depends_on:
+    - nginx-rtmp
+    secrets:
+      - source: playout
+        target: /comfy-channel/playout.ini
+        mode: 0400
+    secrets:
+      - source: config
+        target: /comfy-channel/src/Config.py
+        mode: 0400
+    volumes:
+      - ~/dev/comfy-content:/comfy-channel/videos
+
+  nginx-rtmp:
+    image: tiangolo/nginx-rtmp
+    ports:
+      - "80:80"
+      - "1935:1935"
+    secrets:
+      - source: nginx-config
+        target: /etc/nginx/nginx.conf
+        mode: 0400
+      - source: index-html
+        target: /www/index.html
+        mode: 0644
+
+secrets:
+  nginx-config:
+    file: ./nginx/nginx.conf
+  index-html:
+    file: ./nginx/index.html
+  playout:
+    file: ./playout.ini
+  config:
+    file: ./src/Config.py
+
+volumes:
+  comfy-volume:

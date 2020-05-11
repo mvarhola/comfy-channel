@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Comfy Channel</title>
+    <style>
+        html,
+        body {
+        height: 100%;
+        margin: 0;
+        background-image: url("5015.png");
+        background-repeat: repeat;
+        }
+        .container {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        }
+        .player {
+        background-color: #000000;
+        width: 1280px;
+        height: 720px;
+        }
+    </style>
+    <link href="https://vjs.zencdn.net/7.5.4/video-js.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+        <div class="player">
+            <video id='my-video' class='video-js' controls autoplay preload='auto' width='1280' height='720' data-setup='{}'>
+                <source src='http://localhost/hls/stream.m3u8' type='application/x-mpegURL'>
+            </video>
+        </div>
+    </div>
+    <script src='https://vjs.zencdn.net/7.5.4/video.js'></script>
+  </body>
+</html>
