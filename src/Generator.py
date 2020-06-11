@@ -1,6 +1,6 @@
 import os
 import random
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import Logger
 from MediaItem import MediaItem
@@ -54,6 +54,7 @@ def gen_upnext_text(playlist, info_file=None):
     overlay_text = ""
 
     time_index = get_time_hm()
+    time_index += timedelta(seconds=30) # TODO: make this be the length of the upnext video
     for item in playlist:
         overlay_text += time_index.strftime("%H:%M") + \
             "  " + item.title + "\n\n"
