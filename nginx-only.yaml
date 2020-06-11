@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  nginx-rtmp:
+    image: tiangolo/nginx-rtmp
+    ports:
+      - "80:80"
+      - "1935:1935"
+    secrets:
+      - source: nginx-config
+        target: /etc/nginx/nginx.conf
+        mode: 0400
+      - source: index-html
+        target: /www/index.html
+        mode: 0644
+
+secrets:
+  nginx-config:
+    file: ./nginx/nginx.conf
+  index-html:
+    file: ./nginx/index.html
