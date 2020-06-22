@@ -11,8 +11,9 @@ SCHEDULER_UPNEXT_AUDIO_FOLDER = 'upnext/audio'
 SCHEDULER_UPNEXT_WISDOM_FILE = 'upnext/wisdom.txt'
 
 OVERLAY_FILE = 'upnext/comfychan.png'
-OVERLAY_X = 540
-OVERLAY_Y = -5
+OVERLAY_FILE_OUTLINE = 'upnext/comfychanline.png'
+OVERLAY_X = 520
+OVERLAY_Y = 0
 
 SERV_DRAWTEXT_X = 25
 SERV_DRAWTEXT_Y = 25
