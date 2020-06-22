@@ -71,6 +71,7 @@ def main():
     init_args()  # initialize and parse the passed arguments
     signal.signal(signal.SIGINT, signal_handler)  # Handle CTRL+C
     server = Server(c.OUTPUT_LOCATION).start()  # Start the server
+    consecutive_retries = 0
 
     # Main loop
     while True:
@@ -93,10 +94,13 @@ def main():
                 if retries >= c.MAX_SAME_FILE_RETRIES:
                     Logger.LOGGER.log(
                         Logger.TYPE_ERROR, "FFMPEG Return Code {}, giving up!".format(ret))
-                    Logger.LOGGER.log(Logger.TYPE_CRIT, "{} Retries reached, exiting program!".format(
-                        c.MAX_SAME_FILE_RETRIES))
-                    kill_process("ffmpeg")
-                    sys.exit(0)
+                    consecutive_retries += 1
+
+                    if consecutive_retries > c.MAX_CONSECUTIVE_RETRIES:
+                        Logger.LOGGER.log(Logger.TYPE_CRIT, "{} Retries consecutive reached, shutting down!".format(consecutive_retries))
+                        kill_process("ffmpeg")
+                        sys.exit(0)
+
 
 
 if __name__ == "__main__":
