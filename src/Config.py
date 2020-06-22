@@ -1,7 +1,7 @@
 # Auto-Channel configuration file
 
 MAX_CONSECUTIVE_RETRIES = 3  # TODO: If several consecutive files fail, exit program
-MAX_SAME_FILE_RETRIES = 5  # Number of times to attempt playing a file before giving up
+MAX_SAME_FILE_RETRIES = 3  # Number of times to attempt playing a file before giving up
 
 PLAYOUT_FILE = 'playout.ini'
 OUTPUT_LOCATION = 'rtmp://localhost/live/stream'
@@ -9,6 +9,10 @@ OUTPUT_LOCATION = 'rtmp://localhost/live/stream'
 SCHEDULER_UPNEXT_VIDEO_FOLDER = 'upnext/video'
 SCHEDULER_UPNEXT_AUDIO_FOLDER = 'upnext/audio'
 SCHEDULER_UPNEXT_WISDOM_FILE = 'upnext/wisdom.txt'
+
+OVERLAY_FILE = 'upnext/comfychan.png'
+OVERLAY_X = 540
+OVERLAY_Y = -5
 
 SERV_DRAWTEXT_X = 25
 SERV_DRAWTEXT_Y = 25

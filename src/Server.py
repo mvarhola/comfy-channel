@@ -16,6 +16,8 @@ class Server:
         self.ff = ''
         self.process = None
         self.output = output
+        self.overlay_file = ffmpeg.input(c.OVERLAY_FILE)
+
 
     def start(self):
         Logger.LOGGER.log(Logger.TYPE_INFO,
@@ -33,6 +35,7 @@ class Server:
                              fontfile=c.SERV_DRAWTEXT_FONT_FILE,
                              fontcolor=c.SERV_DRAWTEXT_FONT_COLOR
                              )
+        v1 = ffmpeg.overlay(v1, self.overlay_file, x=c.OVERLAY_X, y=c.OVERLAY_Y)
         a1 = in1['a']
         joined = ffmpeg.concat(v1, a1, v=1, a=1)
 
