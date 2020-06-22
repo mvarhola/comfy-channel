@@ -15,6 +15,17 @@ def listdir_nohidden(path):
         if not f.startswith('.'):
             yield os.path.join(path, f)
 
+def listdir_file_walk(dir):
+    directory_listing = []
+
+    for path, dirs, files in os.walk(dir):
+        files = [f for f in files if not f[0] == '.']
+        dirs[:] = [d for d in dirs if not d[0] == '.']
+        for name in files:
+            directory_listing += [os.path.join(path, name)]
+
+    return directory_listing
+
 
 def gen_playlist(dir, num_files=5):
     Logger.LOGGER.log(Logger.TYPE_INFO,
@@ -42,7 +53,7 @@ def gen_upnext(video_dir, audio_dir=None, playlist=None, info_file=None):
     info_text = None
 
     video_file = random.choice(list(listdir_nohidden(video_dir)))
-    audio_file = random.choice(list(listdir_nohidden(audio_dir)))
+    audio_file = random.choice(listdir_file_walk(audio_dir))
 
     if playlist:
         info_text = gen_upnext_text(playlist, info_file=info_file)
