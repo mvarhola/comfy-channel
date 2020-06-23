@@ -18,7 +18,7 @@ class MediaItem:
         else:
             self.title = self.media_info.tracks[0].other_file_name[0]
         self.duration = self.media_info.tracks[0].duration or 0
-        self.duration_readable = datetime.timedelta(milliseconds=int(self.duration))
+        self.duration_readable = datetime.timedelta(milliseconds=int(float(self.duration)))
         self.file_extension = self.media_info.tracks[0].file_extension
 
     def __str__(self):
