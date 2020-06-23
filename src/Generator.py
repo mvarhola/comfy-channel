@@ -64,12 +64,14 @@ def gen_upnext(video_dir, audio_dir=None, playlist=None, info_file=None):
 def gen_upnext_text(playlist, info_file=None):
     overlay_text = ""
 
-    time_index = get_time_hm()
-    time_index += timedelta(seconds=30) # TODO: make this be the length of the upnext video
+    #  time_index = get_time_hm()
+    # time_index += timedelta(seconds=30) # TODO: make this be the length of the upnext video
     for item in playlist:
-        overlay_text += time_index.strftime("%H:%M") + \
+        # overlay_text += time_index.strftime("%H:%M") + \
+        #     "  " + item.title + "\n\n"
+        overlay_text += '>' + \
             "  " + item.title + "\n\n"
-        time_index += item.duration_readable
+        # time_index += item.duration_readable
 
     if info_file:
         overlay_text += "\n" + get_random_line(info_file)
