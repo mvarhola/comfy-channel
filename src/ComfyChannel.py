@@ -3,11 +3,12 @@
 import signal
 import sys
 import argparse
-
+import random
 import psutil
 
 import Config as c
 import Logger
+import Generator
 from Client import Client
 from MediaItem import MediaItem
 from Scheduler import Scheduler
@@ -28,6 +29,10 @@ def init_args():
                         action="store")
     parser.add_argument("-f", "--font_file", help="font file for overlay text",
                         action="store")
+    parser.add_argument("-p", "--playout_file", help="playout config file",
+                        action="store")
+    parser.add_argument("-l", "--loop", help="loop after playout file ends",
+                        action="store_true")
 
     args = vars(parser.parse_args())
 
@@ -42,7 +47,10 @@ def init_args():
     if args['font_file']:
         c.CLIENT_DRAWTEXT_FONT_FILE = args['font_file']
         c.SERVER_DRAWTEXT_FONT_FILE = args['font_file']
-
+    if args['playout_file']:
+        c.PLAYOUT_FILE = args['playout_file']
+    if args['loop']:
+        c.LOOP = True
     return args
 
 # Exit program if signal received
@@ -64,6 +72,29 @@ def kill_process(procname):
                 Logger.TYPE_CRIT, "{} pid:{} killed!".format(proc.name(), proc.pid))
             proc.kill()
 
+# Play an item to the Server
+
+
+def play_item(item, server):
+    retries = 0
+    client = Client(item, server)
+    ret = client.play()
+
+    while ret != 0 and retries < c.MAX_SAME_FILE_RETRIES:
+        Logger.LOGGER.log(
+            Logger.TYPE_ERROR, "FFMPEG Return Code {}, trying again".format(ret))
+        ret = client.play()
+        retries += 1
+    # (if a file fails to play several times consecutively, shut down)
+    if retries >= c.MAX_SAME_FILE_RETRIES:
+        Logger.LOGGER.log(
+            Logger.TYPE_ERROR, "FFMPEG Return Code {}, giving up!".format(ret))
+        consecutive_retries += 1
+        if consecutive_retries > c.MAX_CONSECUTIVE_RETRIES:
+            Logger.LOGGER.log(Logger.TYPE_CRIT, "{} Retries consecutive reached, shutting down!".format(consecutive_retries))
+            kill_process("ffmpeg")
+            sys.exit(0)
+
 # Main program
 
 
@@ -75,31 +106,22 @@ def main():
 
     # Main loop
     while True:
+        bumplist = Generator.gen_playlist(c.BUMP_FOLDER) # Playlist of bumps
         scheduler = Scheduler(c.PLAYOUT_FILE) # Create a schedule using full playout file
         Logger.LOGGER.log(Logger.TYPE_INFO,
             'Scheduler Created, PLAYOUT_FILE: {}'.format(c.PLAYOUT_FILE))
         for i in scheduler.blocklist: 			# Play each block in the schedule
             for j in i.playlist:				# Play each file in the block
-                retries = 0
-                client = Client(j, server)
-                ret = client.play()
-
-                while ret != 0 and retries < c.MAX_SAME_FILE_RETRIES:
-                    Logger.LOGGER.log(
-                        Logger.TYPE_ERROR, "FFMPEG Return Code {}, trying again".format(ret))
-                    ret = client.play()
-                    retries += 1
-
-                # (if a file fails to play several times consecutively, shut down)
-                if retries >= c.MAX_SAME_FILE_RETRIES:
-                    Logger.LOGGER.log(
-                        Logger.TYPE_ERROR, "FFMPEG Return Code {}, giving up!".format(ret))
-                    consecutive_retries += 1
-
-                    if consecutive_retries > c.MAX_CONSECUTIVE_RETRIES:
-                        Logger.LOGGER.log(Logger.TYPE_CRIT, "{} Retries consecutive reached, shutting down!".format(consecutive_retries))
-                        kill_process("ffmpeg")
-                        sys.exit(0)
+                play_item(j, server)
+                if j.media_type == "regular" and random.random() > 1-i.bump_chance: # Only attempt bump chance on regular items
+                    Logger.LOGGER.log(Logger.TYPE_INFO,"Bump chance succeeded.")
+                    play_item(random.choice(bumplist), server)
+                else : Logger.LOGGER.log(Logger.TYPE_INFO,"Bump chance failed.")
+        if not c.LOOP:
+            Logger.LOGGER.log(Logger.TYPE_INFO,'Schedule Finished, shutting down.')
+            sys.exit(0)
+        else: Logger.LOGGER.log(Logger.TYPE_INFO,'Schedule Finished, looping.')
+    
 
 
 
