@@ -75,25 +75,25 @@ def kill_process(procname):
 # Play an item to the Server
 
 
-def play_item(item, server):
+def play_item(item, server, consecutive_retries):
     retries = 0
     client = Client(item, server)
-    ret = client.play()
-
-    while ret != 0 and retries < c.MAX_SAME_FILE_RETRIES:
-        Logger.LOGGER.log(
-            Logger.TYPE_ERROR, "FFMPEG Return Code {}, trying again".format(ret))
+    while True:
         ret = client.play()
-        retries += 1
-    # (if a file fails to play several times consecutively, shut down)
-    if retries >= c.MAX_SAME_FILE_RETRIES:
-        Logger.LOGGER.log(
-            Logger.TYPE_ERROR, "FFMPEG Return Code {}, giving up!".format(ret))
-        consecutive_retries += 1
-        if consecutive_retries > c.MAX_CONSECUTIVE_RETRIES:
-            Logger.LOGGER.log(Logger.TYPE_CRIT, "{} Retries consecutive reached, shutting down!".format(consecutive_retries))
-            kill_process("ffmpeg")
-            sys.exit(0)
+        if ret != 0:
+            Logger.LOGGER.log(
+                Logger.TYPE_ERROR, "FFMPEG Return Code {}, trying again".format(ret))
+            retries += 1
+            # (if a file fails to play several times consecutively, shut down)
+            if retries >= c.MAX_SAME_FILE_RETRIES:
+                Logger.LOGGER.log(
+                    Logger.TYPE_ERROR, "FFMPEG Return Code {}, giving up!".format(ret))
+                consecutive_retries += 1
+                if consecutive_retries > c.MAX_CONSECUTIVE_RETRIES:
+                    Logger.LOGGER.log(Logger.TYPE_CRIT, "{} Retries consecutive reached, shutting down!".format(consecutive_retries))
+                    kill_process("ffmpeg")
+                    sys.exit(0)
+        else : break
 
 # Main program
 
@@ -110,13 +110,15 @@ def main():
         scheduler = Scheduler(c.PLAYOUT_FILE) # Create a schedule using full playout file
         Logger.LOGGER.log(Logger.TYPE_INFO,
             'Scheduler Created, PLAYOUT_FILE: {}'.format(c.PLAYOUT_FILE))
-        for i in scheduler.blocklist: 			# Play each block in the schedule
-            for j in i.playlist:				# Play each file in the block
-                play_item(j, server)
-                if j.media_type == "regular" and random.random() > 1-i.bump_chance: # Only attempt bump chance on regular items
-                    Logger.LOGGER.log(Logger.TYPE_INFO,"Bump chance succeeded.")
-                    play_item(random.choice(bumplist), server)
-                else : Logger.LOGGER.log(Logger.TYPE_INFO,"Bump chance failed.")
+        for block in scheduler.blocklist: 			# Play each block in the schedule
+            for x in range(len(block.playlist)):				# Play each file in the block
+                print(x,"/",len(block.playlist))
+                play_item(block.playlist[x], server, consecutive_retries)
+                # Only attempt bump chance on regular items, and not the last item
+                if block.playlist[x].media_type == "regular" and x < len(block.playlist) - 1 and random.random() > 1-block.bump_chance:
+                    Logger.LOGGER.log(Logger.TYPE_INFO,"Bump chance succeeded, playing bump.")
+                    play_item(random.choice(bumplist), server, consecutive_retries)
+                x += 1
         if not c.LOOP:
             Logger.LOGGER.log(Logger.TYPE_INFO,'Schedule Finished, shutting down.')
             sys.exit(0)
