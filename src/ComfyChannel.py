@@ -93,6 +93,7 @@ def play_item(item, server, consecutive_retries):
                     Logger.LOGGER.log(Logger.TYPE_CRIT, "{} Retries consecutive reached, shutting down!".format(consecutive_retries))
                     kill_process("ffmpeg")
                     sys.exit(0)
+                else : break
         else : break
 
 # Main program
@@ -112,13 +113,11 @@ def main():
             'Scheduler Created, PLAYOUT_FILE: {}'.format(c.PLAYOUT_FILE))
         for block in scheduler.blocklist: 			# Play each block in the schedule
             for x in range(len(block.playlist)):				# Play each file in the block
-                print(x,"/",len(block.playlist))
                 play_item(block.playlist[x], server, consecutive_retries)
                 # Only attempt bump chance on regular items, and not the last item
                 if block.playlist[x].media_type == "regular" and x < len(block.playlist) - 1 and random.random() > 1-block.bump_chance:
                     Logger.LOGGER.log(Logger.TYPE_INFO,"Bump chance succeeded, playing bump.")
                     play_item(random.choice(bumplist), server, consecutive_retries)
-                x += 1
         if not c.LOOP:
             Logger.LOGGER.log(Logger.TYPE_INFO,'Schedule Finished, shutting down.')
             sys.exit(0)
