@@ -93,6 +93,7 @@ def play_item(item, server, consecutive_retries):
                     Logger.LOGGER.log(Logger.TYPE_CRIT, "{} Retries consecutive reached, shutting down!".format(consecutive_retries))
                     kill_process("ffmpeg")
                     sys.exit(0)
+                else : break
         else : break
 
 # Main program
