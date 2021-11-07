@@ -36,5 +36,5 @@ class Scheduler:
         c = self.config
         for i in self.config.sections():
             block = Block(c[i]['name'], c[i]['folder'], c[i]
-                          ['files'], c[i]['bump_chance'])
+                          ['files'], float(c[i]['bump_chance']))
             self.blocklist.append(block)
