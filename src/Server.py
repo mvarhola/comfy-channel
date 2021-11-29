@@ -36,8 +36,8 @@ class Server:
                              fontfile=c.SERV_DRAWTEXT_FONT_FILE,
                              fontcolor=c.SERV_DRAWTEXT_FONT_COLOR
                              )
-        v1 = ffmpeg.overlay(v1, self.overlay_file, x=c.OVERLAY_X, y=c.OVERLAY_Y)
-        v1 = ffmpeg.overlay(v1, self.overlay_file_outline, x=c.OVERLAY_X, y=c.OVERLAY_Y)
+        v1 = ffmpeg.overlay(v1, self.overlay_file, x=c.OVERLAY_X, y=c.OVERLAY_Y, loop=1)
+        v1 = ffmpeg.overlay(v1, self.overlay_file_outline, x=c.OVERLAY_X, y=c.OVERLAY_Y, loop=1)
 
         a1 = in1['a']
         joined = ffmpeg.concat(v1, a1, v=1, a=1)
