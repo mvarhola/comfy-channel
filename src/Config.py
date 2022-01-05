@@ -1,11 +1,14 @@
 # Auto-Channel configuration file
 
+# For calculating times on upnext items
+TIME_INDEX = None
+
 MAX_CONSECUTIVE_RETRIES = 3  # TODO: If several consecutive files fail, exit program
 MAX_SAME_FILE_RETRIES = 3  # Number of times to attempt playing a file before giving up
 
 PLAYOUT_FILE = 'playout.ini'
 OUTPUT_LOCATION = 'rtmp://localhost/live/stream'
-LOOP = False
+LOOP = True
 
 SCHEDULER_UPNEXT_VIDEO_FOLDER = 'upnext/video'
 SCHEDULER_UPNEXT_AUDIO_FOLDER = 'upnext/audio'
