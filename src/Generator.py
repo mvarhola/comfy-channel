@@ -1,14 +1,11 @@
 import os
 import random
-from datetime import datetime, timedelta
+from datetime import timedelta
+from pymediainfo import MediaInfo
 
 import Logger
+import Config as c
 from MediaItem import MediaItem
-
-
-def get_time_hm():
-    return datetime.now()
-
 
 def listdir_nohidden(path):
     for f in os.listdir(path):
@@ -35,7 +32,8 @@ def gen_playlist(dir, num_files=5):
 
     # https://stackoverflow.com/questions/2909975/python-list-directory-subdirectory-and-files
     for path, dirs, files in os.walk(dir):
-        files = [f for f in files if not f[0] == '.']
+        # Filtering dot files and folders and extensions commonly used for subtitles
+        files = [f for f in files if (not f[0] == '.') and (not f.split('.')[-1] in ['srt', 'ass', 'idx'])]
         dirs[:] = [d for d in dirs if not d[0] == '.']
         for name in files:
             directory_listing += [os.path.join(path, name)]
@@ -56,24 +54,24 @@ def gen_upnext(video_dir, audio_dir=None, playlist=None, info_file=None):
     audio_file = random.choice(listdir_file_walk(audio_dir))
 
     if playlist:
-        info_text = gen_upnext_text(playlist, info_file=info_file)
+        info_text = gen_upnext_text(playlist, info_file=info_file, duration=MediaInfo.parse(video_file).tracks[0].duration/1000)
 
     return MediaItem(video_path=video_file, audio_path=audio_file, media_type="upnext", overlay_text=info_text)
 
 
-def gen_upnext_text(playlist, info_file=None):
+def gen_upnext_text(playlist, info_file=None, duration=0):
     overlay_text = ""
-    time_index = get_time_hm()
-    time_index += timedelta(seconds=30)
+    c.TIME_INDEX += timedelta(seconds=duration) # Upnext Length 
+
     for i in range(len(playlist)):
         item = playlist[i]
         if i == 0:
             overlay_text += 'Next -' + \
             "  " + item.title + "\n\n"
         else:
-            overlay_text += time_index.strftime("%H:%M") + ' -' + \
+            overlay_text += c.TIME_INDEX.strftime("%H:%M") + ' -' + \
             "  " + item.title + "\n\n"
-        time_index += timedelta(seconds=(item.duration/1000))
+        c.TIME_INDEX += timedelta(seconds=(item.duration/1000))
 
     if info_file:
         overlay_text += "\n" + get_random_line(info_file)
