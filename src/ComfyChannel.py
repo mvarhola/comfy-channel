@@ -90,7 +90,9 @@ def play_item(item, server):
                 Logger.LOGGER.log(
                     Logger.TYPE_ERROR, "Retry limit reached, giving up!")
                 return 1
-        else : return 0
+        else : 
+            client.stop()
+            return 0
 
 # Main program
 
@@ -124,6 +126,7 @@ def main():
                         sys.exit(0)
         if not c.LOOP:
             Logger.LOGGER.log(Logger.TYPE_INFO,'Schedule Finished, shutting down.')
+            server.stop()
             sys.exit(0)
         else: Logger.LOGGER.log(Logger.TYPE_INFO,'Schedule Finished, looping.')
     
