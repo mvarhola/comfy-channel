@@ -61,6 +61,8 @@ class Client:
 
             in1 = ffmpeg.input(self.media_item.video_path)
             v1 = ffmpeg.filter(in1['v'], 'scale', c.CLIENT_VIDEO_SCALE)
+            if (c.CLIENT_ENABLE_DEINTERLACE):
+                v1 = ffmpeg.filter(v1, 'yadif')
             a1 = in1['a']
             output_stream = ffmpeg.concat(v1, a1, v=1, a=1)
 
