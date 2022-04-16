@@ -33,12 +33,12 @@ def gen_playlist(dir, num_files=5):
     # https://stackoverflow.com/questions/2909975/python-list-directory-subdirectory-and-files
     for path, dirs, files in os.walk(dir):
         # Filtering dot files and folders and extensions commonly used for subtitles
-        files = [f for f in files if (not f[0] == '.') and (not f.split('.')[-1] in ['srt', 'ass', 'idx'])]
+        files = [f for f in files if (not f[0] == '.') and (not f.split('.')[-1] in ['srt', 'ass', 'idx', 'sub'])]
         dirs[:] = [d for d in dirs if not d[0] == '.']
         for name in files:
             directory_listing += [os.path.join(path, name)]
 
-    random.shuffle(directory_listing)
+    random.shuffle(directory_listing, random.SystemRandom().random)
     for i in directory_listing[:num_files]:
         playlist.append(MediaItem(i))
 
