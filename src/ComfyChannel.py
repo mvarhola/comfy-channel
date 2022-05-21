@@ -126,7 +126,6 @@ def main():
                         sys.exit(0)
         if not c.LOOP:
             Logger.LOGGER.log(Logger.TYPE_INFO,'Schedule Finished, shutting down.')
-            server.stop()
             sys.exit(0)
         else: Logger.LOGGER.log(Logger.TYPE_INFO,'Schedule Finished, looping.')
     
