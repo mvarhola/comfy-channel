@@ -81,7 +81,8 @@ class Client:
                                 hls_list_size=c.CLIENT_HLS_LIST_SIZE,
                                 hls_time=c.CLIENT_HLS_TIME,
                                 format=c.CLIENT_FORMAT,
-                                pix_fmt=c.CLIENT_PIX_FMT)
+                                pix_fmt=c.PIX_FMT
+                                )
 
         self.cmd = ['ffmpeg']+ffmpeg.get_args(self.ff)
 
