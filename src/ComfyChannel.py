@@ -9,7 +9,6 @@ import psutil
 import Config as c
 import Logger
 import Generator
-from os import listdir
 from datetime import datetime
 from Client import Client
 from MediaItem import MediaItem
