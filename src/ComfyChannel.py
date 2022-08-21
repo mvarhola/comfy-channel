@@ -9,6 +9,8 @@ import psutil
 import Config as c
 import Logger
 import Generator
+from os import listdir
+from os.path import isdir
 from datetime import datetime
 from Client import Client
 from MediaItem import MediaItem
@@ -106,7 +108,7 @@ def main():
     # Main loop
     while True:
         c.TIME_INDEX = datetime.now()
-        bumplist = Generator.gen_playlist(c.BUMP_FOLDER) # Playlist of bumps
+        bumplist = Generator.gen_playlist(c.BUMP_FOLDER, num_files=len(listdir(c.BUMP_FOLDER)), mode="shuffle") # Playlist of bumps
         scheduler = Scheduler(c.PLAYOUT_FILE) # Create a schedule using full playout file
         Logger.LOGGER.log(Logger.TYPE_INFO,
             'Scheduler Created, PLAYOUT_FILE: {}'.format(c.PLAYOUT_FILE))
@@ -115,9 +117,9 @@ def main():
                 ret = play_item(block.playlist[x], server)
                 if ret == 0: # If item played successfully, roll bump chance
                     # Only attempt bump chance on regular items, and not the last item
-                    if block.playlist[x].media_type == "regular" and x < len(block.playlist) - 1 and random.random() > 1-block.bump_chance:
+                    if len(bumplist) > 0 and block.playlist[x].media_type == "regular" and x < len(block.playlist) - 1 and random.random() > 1-block.bump_chance:
                         Logger.LOGGER.log(Logger.TYPE_INFO,"Bump chance succeeded, playing bump.")
-                        play_item(random.choice(bumplist), server)
+                        play_item(random.SystemRandom().choice(bumplist), server)
                 else: # else, increment consecutive retries
                     consecutive_retries += 1
                     if consecutive_retries >= c.MAX_CONSECUTIVE_RETRIES:
