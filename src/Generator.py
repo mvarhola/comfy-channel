@@ -30,11 +30,6 @@ def gen_playlist(dir, num_files=None):
     playlist = []
     directory_listing = []
 
-    # If no num_files is passed, just use whole dir
-    # (Used mainly by generating the bump playlist)
-    if num_files == None:
-        num_files = len(directory_listing)
-
     # https://stackoverflow.com/questions/2909975/python-list-directory-subdirectory-and-files
     for path, dirs, files in os.walk(dir):
         # Filtering dot files and folders and extensions commonly used for subtitles
@@ -42,6 +37,11 @@ def gen_playlist(dir, num_files=None):
         dirs[:] = [d for d in dirs if not d[0] == '.']
         for name in files:
             directory_listing += [os.path.join(path, name)]
+
+    # If no num_files is passed, just use whole dir
+    # (Used mainly by generating the bump playlist)
+    if num_files == None:
+        num_files = len(directory_listing)
 
     random.shuffle(directory_listing, random.SystemRandom().random)
     for i in directory_listing[:num_files]:
