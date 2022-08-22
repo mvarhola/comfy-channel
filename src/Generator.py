@@ -24,11 +24,16 @@ def listdir_file_walk(dir):
     return directory_listing
 
 
-def gen_playlist(dir, num_files=5):
+def gen_playlist(dir, num_files=None):
     Logger.LOGGER.log(Logger.TYPE_INFO,
                       'Generating playlist from directory: {}'.format(dir))
     playlist = []
     directory_listing = []
+
+    # If no num_files is passed, just use whole dir
+    # (Used mainly by generating the bump playlist)
+    if num_files == None:
+        num_files = len(directory_listing)
 
     # https://stackoverflow.com/questions/2909975/python-list-directory-subdirectory-and-files
     for path, dirs, files in os.walk(dir):
