@@ -24,7 +24,7 @@ def listdir_file_walk(dir):
     return directory_listing
 
 
-def gen_playlist(dir, num_files=5):
+def gen_playlist(dir, num_files=None):
     Logger.LOGGER.log(Logger.TYPE_INFO,
                       'Generating playlist from directory: {}'.format(dir))
     playlist = []
@@ -37,6 +37,11 @@ def gen_playlist(dir, num_files=5):
         dirs[:] = [d for d in dirs if not d[0] == '.']
         for name in files:
             directory_listing += [os.path.join(path, name)]
+
+    # If no num_files is passed, just use whole dir
+    # (Used mainly by generating the bump playlist)
+    if num_files == None:
+        num_files = len(directory_listing)
 
     random.shuffle(directory_listing, random.SystemRandom().random)
     for i in directory_listing[:num_files]:
